@@ -85,9 +85,10 @@ D2 = np.array([[2*np.pi*b,  2*np.pi*b**2*(1/2-a), b**2*T11],
 
 D = D1 + (1-psi_1-psi_2)*D2
 
+amplitude = 1
 
 #Structual stiffness matrix [E]:
-E_eqv = np.array([[K_h+(5/8)*(A**4)*K_h5, 0 , 0],
+E_eqv = np.array([[K_h+(5/8)*(amplitude**4)*K_h5, 0 , 0],
     [0 , K_alpha, 0],
     [0 , 0 , K_beta]])
 
@@ -139,16 +140,12 @@ W2 = np.array([[-epsi_1/b,0,0,0,0,0],
 #Taking the inverse of [M]:
 M_inv = np.linalg.inv(M)
 
-Q = np.block([[M_inv @ (C+rho*U*D),-M_inv @ (E_eqv+rho*U**2*F),-rho*U**3*M_inv @ W],
+Q_eqv = np.block([[M_inv @ (C+rho*U*D),-M_inv @ (E_eqv+rho*U**2*F),-rho*U**3*M_inv @ W],
               [np.eye(3),np.zeros([3,3]),np.zeros([3,6])],
               [np.zeros([6,3]), W1,U*W2]])
 
-pd.DataFrame(Q).to_excel('matrix_Q.xlsx')
+pd.DataFrame(Q_eqv).to_excel('matrix_Q.xlsx')
 
-q_n = np.block([[-M_inv @ [[1],
-                         [0],
-                         [0]]],
-                 [np.zeros([9,1])]])
 
 
 #The Q matrix that is calculated now is the 'normal' Q-matrix, not the equivalent linearized Q-matrix, this has to be changed.
