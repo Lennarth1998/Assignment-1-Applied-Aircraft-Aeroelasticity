@@ -1,7 +1,9 @@
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 
 U=1 #NEEDS CHANGING!!!
+
 #Initiating import parameters:
 m               = 50    	    #[kg/m]     - Mass per unit length
 S               = 5             #[kgm/m]    - Static mass moment of the wing around x_f
@@ -141,10 +143,15 @@ Q = np.block([[M_inv @ (C+rho*U*D),-M_inv @ (E+rho*U**2*F),-rho*U**3*M_inv @ W],
               [np.eye(3),np.zeros([3,3]),np.zeros([3,6])],
               [np.zeros([6,3]), W1,U*W2]])
 
+pd.DataFrame(Q).to_excel('matrix_Q.xlsx')
+
 q_n = np.block([[-M_inv @ [[1],
                          [0],
                          [0]]],
                  [np.zeros([9,1])]])
+
+
+#The Q matrix that is calculated now is the 'normal' Q-matrix, not the equivalent linearized Q-matrix, this has to be changed.
 
 
 
