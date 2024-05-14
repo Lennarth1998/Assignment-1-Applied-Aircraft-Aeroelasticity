@@ -87,7 +87,7 @@ D = D1 + (1-psi_1-psi_2)*D2
 
 
 #Structual stiffness matrix [E]:
-E = np.array([[K_h, 0 , 0],
+E_eqv = np.array([[K_h+(5/8)*(A**4)*K_h5, 0 , 0],
     [0 , K_alpha, 0],
     [0 , 0 , K_beta]])
 
@@ -139,7 +139,7 @@ W2 = np.array([[-epsi_1/b,0,0,0,0,0],
 #Taking the inverse of [M]:
 M_inv = np.linalg.inv(M)
 
-Q = np.block([[M_inv @ (C+rho*U*D),-M_inv @ (E+rho*U**2*F),-rho*U**3*M_inv @ W],
+Q = np.block([[M_inv @ (C+rho*U*D),-M_inv @ (E_eqv+rho*U**2*F),-rho*U**3*M_inv @ W],
               [np.eye(3),np.zeros([3,3]),np.zeros([3,6])],
               [np.zeros([6,3]), W1,U*W2]])
 
