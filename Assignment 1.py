@@ -66,7 +66,7 @@ def matrices(rho, U, amplitude):
                          [-T1*b, 2*T13*b**2, (-T3*b**2)/np.pi]])
 
     #Mass matrix [M]:
-    M = A + rho*B #where is this given?
+    M = A + rho*B
 
     #Structual Damping [C]:
     C = np.array([[C_h, 0 , 0],
@@ -112,10 +112,10 @@ def matrices(rho, U, amplitude):
                    [psi_1*epsi_1*(T10-((epsi_1*T11)/2))/(np.pi*b)],
                    [psi_2*epsi_2*(T10-((epsi_2*T11)/2))/(np.pi*b)]])
 
-
-    W = np.array([[2*np.pi*W0.T],
-                 [-2*np.pi*b**2*(a+1/2)*W0.T],
-                 [b**2*T12*W0.T]])
+    #W = np.array([[2 * np.pi * b * W0.T],
+    #              [-2 * np.pi * (b ** 2) * (a + 0.5) * W0.T],
+    #              [b ** 2 * T12 * W0.T]])
+    W = np.array([[2 * np.pi * b * W0.T, -2 * np.pi * (b ** 2) * (a + 0.5) * W0.T, b ** 2 * T12 * W0.T]])
     W = W.reshape([3, 6])
 
 
@@ -138,9 +138,9 @@ def matrices(rho, U, amplitude):
     #Taking the inverse of [M]:
     M_inv = np.linalg.inv(M)
 
-    Q_eqv = np.block([[M_inv @ (C+rho*U*D),-M_inv @ (E_eqv+rho*U**2*F),-rho*U**3*M_inv @ W],
-                  [np.eye(3),np.zeros([3,3]),np.zeros([3,6])],
-                  [np.zeros([6,3]), W1,U*W2]])
+    Q_eqv = np.block([[-M_inv @ (C+rho*U*D),-M_inv @ (E_eqv+rho*(U**2)*F),-rho*(U**3)*M_inv @ W],
+                  [np.eye(3),np.zeros(shape=(3,3)),np.zeros(shape=(3,6))],
+                  [np.zeros(shape=(6,3)), W1, U*W2]])
 
     return Q_eqv
 
@@ -155,7 +155,7 @@ alpha_omega = []
 beta_omega = []
 
 
-for U in range(10, 120, 1):
+for U in range(10, 125, 1):
     Q_eqv = matrices(1.225, U, 0)
     h_eig = np.linalg.eigvals(Q_eqv)[3]
     alpha_eig = np.linalg.eigvals(Q_eqv)[4]
