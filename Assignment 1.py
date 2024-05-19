@@ -115,9 +115,9 @@ def matrices(rho, U, amplitude):
     #W = np.array([[2 * np.pi * b * W0.T],
     #              [-2 * np.pi * (b ** 2) * (a + 0.5) * W0.T],
     #              [b ** 2 * T12 * W0.T]])
-    W = np.array([[2 * np.pi * b * W0.T, -2 * np.pi * (b ** 2) * (a + 0.5) * W0.T, b ** 2 * T12 * W0.T]])
+    W = np.array([[2 * np.pi * b * W0.T , 2 * np.pi * (b ** 2) * (a + 0.5) * W0.T, b ** 2 * T12 * W0.T]])
     W = W.reshape([3, 6])
-
+    
 
     #Aerodynamic state equation matrices [W1] and [W2]:
     W1 = np.array([[1,0,0],
@@ -155,7 +155,7 @@ alpha_omega = []
 beta_omega = []
 
 
-for U in range(5, 100, 1):
+for U in range(5, 200, 1):
     Q_eqv = matrices(1.225, U, 0)
     h_eig = np.linalg.eigvals(Q_eqv)[3]
     alpha_eig = np.linalg.eigvals(Q_eqv)[4]
