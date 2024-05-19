@@ -155,8 +155,7 @@ alpha_omega = []
 beta_omega = []
 
 
-for U in range(100, 1250, 1):
-    U = U/10
+for U in range(5, 100, 1):
     Q_eqv = matrices(1.225, U, 0)
     h_eig = np.linalg.eigvals(Q_eqv)[3]
     alpha_eig = np.linalg.eigvals(Q_eqv)[4]
@@ -176,19 +175,21 @@ for U in range(100, 1250, 1):
 
 plt.figure()
 plt.title("Omega")
-plt.plot(U_tab, h_omega, label='h')
-plt.plot(U_tab, alpha_omega, label=r'$\alpha$')
-plt.plot(U_tab, beta_omega, label=r'$\beta$')
+plt.scatter(U_tab, h_omega, label='h')
+plt.scatter(U_tab, alpha_omega, label=r'$\alpha$')
+plt.scatter(U_tab, beta_omega, label=r'$\beta$')
 plt.grid()
 plt.legend()
 plt.show()
 
 plt.figure()
 plt.title("Damping")
-plt.plot(U_tab, h_damp, label='h')
-plt.plot(U_tab, alpha_damp, label=r'$\alpha$')
-plt.plot(U_tab, beta_damp, label=r'$\beta$')
+plt.scatter(U_tab, h_damp, label='h')
+plt.scatter(U_tab, alpha_damp, label=r'$\alpha$')
+plt.scatter(U_tab, beta_damp, label=r'$\beta$')
 plt.grid()
 plt.legend()
 plt.show()
+
+
 
