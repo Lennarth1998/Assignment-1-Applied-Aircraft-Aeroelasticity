@@ -85,7 +85,7 @@ def matrices(rho, U, amplitude):
     D = D1 + (1-psi_1-psi_2)*D2
 
     #Structual stiffness matrix [E]:
-    E_eqv = np.array([[K_h+(5/8)*(amplitude**4)*K_h5, 0 , 0],
+    E_eqv = np.array([[K_h+(5/8)*(amplitude**4)*K_h5, 0, 0],
         [0 , K_alpha, 0],
         [0 , 0 , K_beta]])
 
@@ -100,7 +100,7 @@ def matrices(rho, U, amplitude):
 
     F3 = np.array([[2*np.pi*b, 2*np.pi*(b**2)*(0.5-a), (b**2)*T11],
                    [-2*np.pi*(b**2)*(a+0.5), -2*np.pi*(b**3)*(a+0.5)*(0.5-a), -(b**3)*(a+0.5)*T11],
-                   [(b**2)*T12, (b**3)*T12*(1/2-a), ((b**3)*T12*T11)/2*np.pi]])
+                   [(b**2)*T12, (b**3)*T12*(1/2-a), ((b**3)*T12*T11)/(2*np.pi)]])
 
     F= F1+(1-psi_1-psi_2)*F2+ (((psi_1*epsi_1)/b)+((psi_2*epsi_2)/b))*F3
 
@@ -155,7 +155,8 @@ alpha_omega = []
 beta_omega = []
 
 
-for U in range(10, 125, 1):
+for U in range(100, 1250, 1):
+    U = U/10
     Q_eqv = matrices(1.225, U, 0)
     h_eig = np.linalg.eigvals(Q_eqv)[3]
     alpha_eig = np.linalg.eigvals(Q_eqv)[4]
