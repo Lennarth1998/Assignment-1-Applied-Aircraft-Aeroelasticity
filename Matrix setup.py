@@ -1,5 +1,6 @@
 import numpy as np
 from Constants import * 
+import sympy as sp
 
 # Structual mass matrix [A}:
 A = np.array([[m , S , S_beta], 
@@ -92,3 +93,7 @@ q_n = np.block([[-M_inv @ [[1],
                          [0],
                          [0]]],
                  [np.zeros([9,1])]])
+
+zero_vector - sp.zeros(12, 1)
+solution = sp.linsolve((A, zero_vector))
+print(solution)

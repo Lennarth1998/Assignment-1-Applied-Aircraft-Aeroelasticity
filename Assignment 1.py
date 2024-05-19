@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import sympy as sp
 
 U=15 #NEEDS CHANGING!!!
 amplitude = 0.01
@@ -146,11 +147,19 @@ Q_eqv = np.block([[M_inv @ (C+rho*U*D),-M_inv @ (E_eqv+rho*U**2*F),-rho*U**3*M_i
 pd.DataFrame(Q_eqv).to_excel('matrix_Q.xlsx')
 
 eigen_vals = np.linalg.eigvals(Q_eqv)
-
-print(eigen_vals)
+#print(eigen_vals)
 
 #The Q matrix that is calculated now is the 'normal' Q-matrix, not the equivalent linearized Q-matrix, this has to be changed.
 
 
+#Taking the inverse of [Q_eqv]:
+Q_eqv_inv = np.linalg.inv(Q_eqv)
+pd.DataFrame(Q_eqv_inv).to_excel('matrix_Q_eqv_inv.xlsx')
 
+#Setting x_dot to 0
+#x_dot = np.zeros([12,1])
+x_dot = (0.000001, 0.000001,0.000001,0.000001,0.000001,0.000001,0.000001,0.000001,0.000001,0.000001,0.000001,0.000001)
+x_f = np.linalg.solve(Q_eqv_inv, x_dot)
+
+print(x_f)
 
