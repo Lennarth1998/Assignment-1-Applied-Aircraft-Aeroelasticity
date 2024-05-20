@@ -155,7 +155,7 @@ alpha_omega = []
 beta_omega = []
 
 
-for U in range(5, 200, 1):
+for U in range(5, 300, 1):
     Q_eqv = matrices(1.225, U, 0)
     h_eig = np.linalg.eigvals(Q_eqv)[3]
     alpha_eig = np.linalg.eigvals(Q_eqv)[4]
