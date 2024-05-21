@@ -67,7 +67,7 @@ def matrices(rho, U, amplitude):
 
     #Mass matrix [M]:
     M = A + rho*B
-
+    
     #Structual Damping [C]:
     C = np.array([[C_h, 0 , 0],
         [0 , C_alpha, 0],
@@ -83,6 +83,12 @@ def matrices(rho, U, amplitude):
                    [(b**2)*T12, (b**3)*T12*(0.5-a), (b**3*T12*T11)/(2*np.pi)]])
 
     D = D1 + (1-psi_1-psi_2)*D2
+
+    #Structual stiffness matrix [E]:
+    E = np.array([[K_h, 0 , 0],
+                  [0 , K_alpha, 0],
+                  [0 , 0 , K_beta]])
+
 
     #Structual stiffness matrix [E]:
     E_eqv = np.array([[K_h+(5/8)*(amplitude**4)*K_h5, 0, 0],
@@ -181,7 +187,7 @@ plt.plot(U_tab, alpha_omega, label=r'$\alpha$', linestyle='dotted')
 plt.plot(U_tab, beta_omega, label=r'$\beta$')
 plt.grid()
 plt.legend()
-plt.show()
+#plt.show()
 
 plt.figure()
 plt.title("Damping")
@@ -190,7 +196,7 @@ plt.plot(U_tab, alpha_damp, label=r'$\alpha$', linestyle='dotted')
 plt.plot(U_tab, beta_damp, label=r'$\beta$')
 plt.grid()
 plt.legend()
-plt.show()
+#plt.show()
 
 Q_eqv_matrix = matrices(1.225, 5, 0)
 
