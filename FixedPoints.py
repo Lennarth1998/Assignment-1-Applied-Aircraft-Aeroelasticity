@@ -107,9 +107,9 @@ ForM_inv =  np.array([[1],
                       [0]])
 
 q_n2 = -M_inv.dot(ForM_inv)
-q_n = (np.concatenate((q_n2, np.zeros(shape=(9,1)))))*K_h5 #The non linear term
+q_n = (np.concatenate((q_n2, np.zeros(shape=(9, 1)))))*K_h5 #The non linear term
 
-zero_vector = np.zeros(shape=(12,1))
+zero_vector = np.zeros(shape=(12, 1))
 
 #On page 27 and 28 there are some examples, but I truly can't figure out how to solve the f(x) = 0 equation. It's also explained at the end of p24 and 25
 for U in range(5, 200, 1):

@@ -152,53 +152,102 @@ def matrices(rho, U, amplitude):
 
 #pd.DataFrame(Q_eqv).to_excel('matrix_Q.xlsx')
 
-U_tab = []
-h_damp = []
-alpha_damp = []
-beta_damp = []
-h_omega = []
-alpha_omega = []
-beta_omega = []
+### OLD CODE
 
+# U_tab = []
+# h_damp = []
+# alpha_damp = []
+# beta_damp = []
+# h_omega = []
+# alpha_omega = []
+# beta_omega = []
+#
+#
+#
+# for U in range(5, 200, 1):
+#     Q_eqv = matrices(1.225, U, 0)
+#     h_eig = np.linalg.eigvals(Q_eqv)[3]
+#     alpha_eig = np.linalg.eigvals(Q_eqv)[4]
+#     beta_eig = np.linalg.eigvals(Q_eqv)[5]
+#
+#     U_tab.append(U)
+#     h_omega_value = np.sqrt(h_eig.imag**2 + h_eig.real**2)
+#     h_omega.append(h_omega_value)
+#     h_damp.append(-(h_eig.real/h_omega_value))
+#     alpha_omega_value = np.sqrt(alpha_eig.imag ** 2 + alpha_eig.real ** 2)
+#     alpha_omega.append(alpha_omega_value)
+#     alpha_damp.append(-(alpha_eig.real / alpha_omega_value))
+#     beta_omega_value = np.sqrt(beta_eig.imag ** 2 + beta_eig.real ** 2)
+#     beta_omega.append(beta_omega_value)
+#     beta_damp.append(-(beta_eig.real / beta_omega_value))
+#
+#
+# plt.figure()
+# plt.title("Omega")
+# plt.plot(U_tab, h_omega, label='h')
+# plt.plot(U_tab, alpha_omega, label=r'$\alpha$', linestyle='dotted')
+# plt.plot(U_tab, beta_omega, label=r'$\beta$')
+# plt.grid()
+# plt.legend()
+# #plt.show()
+#
+# plt.figure()
+# plt.title("Damping")
+# plt.plot(U_tab, h_damp, label='h')
+# plt.plot(U_tab, alpha_damp, label=r'$\alpha$', linestyle='dotted')
+# plt.plot(U_tab, beta_damp, label=r'$\beta$')
+# plt.grid()
+# plt.legend()
+# #plt.show()
 
+## NEW CODE
 
-for U in range(5, 200, 1):
+omega_h_list = []
+omega_alpha_list = []
+omega_beta_list = []
+damping_h_list = []
+damping_alpha_list = []
+damping_beta_list = []
+U_list = []
+
+for U in range(5, 250):
     Q_eqv = matrices(1.225, U, 0)
-    h_eig = np.linalg.eigvals(Q_eqv)[3]
-    alpha_eig = np.linalg.eigvals(Q_eqv)[4]
-    beta_eig = np.linalg.eigvals(Q_eqv)[5]
 
-    U_tab.append(U)
-    h_omega_value = np.sqrt(h_eig.imag**2 + h_eig.real**2)
-    h_omega.append(h_omega_value)
-    h_damp.append(-(h_eig.real/h_omega_value))
-    alpha_omega_value = np.sqrt(alpha_eig.imag ** 2 + alpha_eig.real ** 2)
-    alpha_omega.append(alpha_omega_value)
-    alpha_damp.append(-(alpha_eig.real / alpha_omega_value))
-    beta_omega_value = np.sqrt(beta_eig.imag ** 2 + beta_eig.real ** 2)
-    beta_omega.append(beta_omega_value)
-    beta_damp.append(-(beta_eig.real / beta_omega_value))
+    V = []
+    #determine fixed point
+
+    Q_eqv_eigenvals, Q_eqv_eigenvec = np.linalg.eig(Q_eqv)
+
+    #L = np.diag(Q_eqv_eigenvals)
+    #V = Q_eqv_eigenvec
+
+    omega_h = np.sqrt(np.real(Q_eqv_eigenvals[3])**2 + np.imag(Q_eqv_eigenvals[3])**2)
+    omega_alpha = np.sqrt(np.real(Q_eqv_eigenvals[4]) ** 2 + np.imag(Q_eqv_eigenvals[4]) ** 2)
+    omega_beta = np.sqrt(np.real(Q_eqv_eigenvals[5]) ** 2 + np.imag(Q_eqv_eigenvals[5]) ** 2)
+    omega_h_list.append(omega_h)
+    omega_alpha_list.append(omega_alpha)
+    omega_beta_list.append(omega_beta)
+    damping_h_list.append(-np.real(Q_eqv_eigenvals[3])/omega_h)
+    damping_alpha_list.append(-np.real(Q_eqv_eigenvals[4]) / omega_alpha)
+    damping_beta_list.append(-np.real(Q_eqv_eigenvals[5]) / omega_beta)
+
+    U_list.append(U)
 
 
-plt.figure()
-plt.title("Omega")
-plt.plot(U_tab, h_omega, label='h')
-plt.plot(U_tab, alpha_omega, label=r'$\alpha$', linestyle='dotted')
-plt.plot(U_tab, beta_omega, label=r'$\beta$')
-plt.grid()
-plt.legend()
-#plt.show()
 
 plt.figure()
-plt.title("Damping")
-plt.plot(U_tab, h_damp, label='h')
-plt.plot(U_tab, alpha_damp, label=r'$\alpha$', linestyle='dotted')
-plt.plot(U_tab, beta_damp, label=r'$\beta$')
-plt.grid()
-plt.legend()
-#plt.show()
+plt.plot(U_list, omega_h_list, label='h')
+plt.plot(U_list, omega_alpha_list, label=r'\alpha')
+plt.plot(U_list, omega_beta_list, label=r'\beta')
+plt.show()
 
-Q_eqv_matrix = matrices(1.225, 5, 0)
+plt.figure()
+plt.plot(U_list, damping_h_list, label='h')
+plt.plot(U_list, damping_alpha_list, label=r'\alpha')
+plt.plot(U_list, damping_beta_list, label=r'\beta')
+plt.show()
+
+
 
 
 
