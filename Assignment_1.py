@@ -210,7 +210,7 @@ damping_alpha_list = []
 damping_beta_list = []
 U_list = []
 
-for U in range(5, 250):
+for U in range(5, 200):
     Q_eqv = matrices(1.225, U, 0)
 
     V = []
@@ -221,30 +221,38 @@ for U in range(5, 250):
     #L = np.diag(Q_eqv_eigenvals)
     #V = Q_eqv_eigenvec
 
-    omega_h = np.sqrt(np.real(Q_eqv_eigenvals[3])**2 + np.imag(Q_eqv_eigenvals[3])**2)
-    omega_alpha = np.sqrt(np.real(Q_eqv_eigenvals[4]) ** 2 + np.imag(Q_eqv_eigenvals[4]) ** 2)
-    omega_beta = np.sqrt(np.real(Q_eqv_eigenvals[5]) ** 2 + np.imag(Q_eqv_eigenvals[5]) ** 2)
+    omega_h = np.sqrt(np.real(Q_eqv_eigenvals[0])**2 + np.imag(Q_eqv_eigenvals[0])**2)
+    omega_alpha = np.sqrt(np.real(Q_eqv_eigenvals[2]) ** 2 + np.imag(Q_eqv_eigenvals[2]) ** 2)
+    omega_beta = np.sqrt(np.real(Q_eqv_eigenvals[4]) ** 2 + np.imag(Q_eqv_eigenvals[4]) ** 2)
     omega_h_list.append(omega_h)
     omega_alpha_list.append(omega_alpha)
     omega_beta_list.append(omega_beta)
-    damping_h_list.append(-np.real(Q_eqv_eigenvals[3])/omega_h)
-    damping_alpha_list.append(-np.real(Q_eqv_eigenvals[4]) / omega_alpha)
-    damping_beta_list.append(-np.real(Q_eqv_eigenvals[5]) / omega_beta)
+    damping_h_list.append(-np.real(Q_eqv_eigenvals[0])/omega_h)
+    damping_alpha_list.append(-np.real(Q_eqv_eigenvals[2]) / omega_alpha)
+    damping_beta_list.append(-np.real(Q_eqv_eigenvals[4]) / omega_beta)
 
     U_list.append(U)
 
 
 
 plt.figure()
+plt.xlabel('U in [m/s]')
+plt.ylabel(r'$\omega$')
 plt.plot(U_list, omega_h_list, label='h')
 plt.plot(U_list, omega_alpha_list, label=r'\alpha')
 plt.plot(U_list, omega_beta_list, label=r'\beta')
+plt.grid()
+plt.savefig('omega_plot.png')
 plt.show()
 
 plt.figure()
+plt.xlabel('U in [m/s]')
+plt.ylabel(r'$\zeta$')
 plt.plot(U_list, damping_h_list, label='h')
 plt.plot(U_list, damping_alpha_list, label=r'\alpha')
 plt.plot(U_list, damping_beta_list, label=r'\beta')
+plt.grid()
+plt.savefig('damping_plot.png')
 plt.show()
 
 
