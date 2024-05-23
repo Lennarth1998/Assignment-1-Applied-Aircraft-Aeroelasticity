@@ -1,6 +1,10 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+#from __future__ import division
+import scipy as sp
+import scipy.linalg as ln
+import scipy.optimize as opt
 
 
 #Initiating import parameters:
@@ -263,7 +267,61 @@ for U in range(5, 200):
 
     U_list.append(U)
 
+def tau_hopf(eig_vals, eps = 1e-13):
+    """
+    :param eig_vals: contains all the eigne values of the system
+    :return: tau_hopf (value of the test function
+    """
 
+    # Pick out only the complex eigen values
+    # eps = 1e-15  # it seems 1e-15 is too low. -> due to numerical errors values larger than 1e-15 can appear
+    # eps = 1e-13  # it seems 1e-13 is fine.
+    i_cmp = sp.where(sp.absolute(eig_vals.imag) > eps)
+    vals_complex = eig_vals[i_cmp]
+
+    # Calculate tau_hopf
+    if vals_complex.size == 0:
+        tau_h = 0
+    else:
+        tau_h = 1
+        for i, val in enumerate(vals_complex):
+            i_cc = sp.where(
+                (sp.absolute(val.real - vals_complex.real) < eps) & (sp.absolute(val.imag + vals_complex.imag) < eps))[
+                0][0]
+            tau_h *= sp.sqrt(val.real + vals_complex[i_cc].real)
+
+    return sp.real(tau_h)
+
+def locate_bifurcation(U_min, U_max):
+    """
+    Determine the exact location and parameters of the bifurcation point
+    :param func: function that returns the eigenvalues of the system
+    :param U_min: lower bound of the velocity range [m/s]
+    :param U_max: upper bound of the velocity range [m/s]
+    :return: bifurcation parameters
+    """
+
+    xtol = 1e-5
+
+    tau = lambda U: tau_hopf(ln.eigvals(matrices(1.225, U, 0)))
+
+    # Find the bifurcation point:
+    U_bf = opt.brentq(tau, U_min, U_max, xtol=xtol)
+
+    # Calculate bifurcation parameters (frequency, damping ratio):
+    Q_eqv = matrices(1.225, U_bf, 0)
+    #Q = func(U_bf)
+    evals = ln.eigvals(Q_eqv)
+
+    eval_bf = evals[sp.absolute(evals.real).argmin()]
+
+    omega_bf = sp.absolute(eval_bf)
+    zeta_bf = -eval_bf.real/sp.absolute(eval_bf)
+
+    return U_bf, omega_bf, zeta_bf, eval_bf
+
+U_bf, omega_bf, zeta_bf, evals = locate_bifurcation(0,200)
+print(U_bf, omega_bf, zeta_bf, evals)
 
 # plt.figure()
 # plt.xlabel('U in [m/s]')
@@ -287,20 +345,20 @@ for U in range(5, 200):
 
 
 plt.figure()
-plt.scatter(U_list, eig_imag_part_list1)
-plt.scatter(U_list, eig_imag_part_list2)
-plt.scatter(U_list, eig_imag_part_list3)
-plt.scatter(U_list, eig_imag_part_list4)
-plt.scatter(U_list, eig_imag_part_list5)
-plt.scatter(U_list, eig_imag_part_list6)
+plt.scatter(U_list[50:70], eig_imag_part_list1[50:70])
+plt.scatter(U_list[50:70], eig_imag_part_list2[50:70])
+plt.scatter(U_list[50:70], eig_imag_part_list3[50:70])
+plt.scatter(U_list[50:70], eig_imag_part_list4[50:70])
+plt.scatter(U_list[50:70], eig_imag_part_list5[50:70])
+plt.scatter(U_list[50:70], eig_imag_part_list6[50:70])
 plt.title('Imag part eigenvalues')
 plt.grid()
 plt.show()
 
 plt.figure()
-plt.scatter(U_list, eig_real_part_list1)
-plt.scatter(U_list, eig_real_part_list2)
-plt.scatter(U_list, eig_real_part_list3)
+plt.scatter(U_list[50:70], eig_real_part_list1[50:70])
+plt.scatter(U_list[50:70], eig_real_part_list2[50:70])
+plt.scatter(U_list[50:70], eig_real_part_list3[50:70])
 plt.title('Real part eigenvalues')
 plt.grid()
 plt.show()
