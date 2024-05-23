@@ -145,14 +145,14 @@ def matrices(rho, U, amplitude):
     M_inv = np.linalg.inv(M)
 
     Q_eqv = np.block([[-M_inv @ (C+rho*U*D),-M_inv @ (E_eqv+rho*(U**2)*F),-rho*(U**3)*M_inv @ W],
-                  [np.eye(3),np.zeros(shape=(3,3)),np.zeros(shape=(3,6))],
+                  [np.eye(3), np.zeros(shape=(3,3)),np.zeros(shape=(3,6))],
                   [np.zeros(shape=(6,3)), W1, U*W2]])
 
     return Q_eqv
 
 #pd.DataFrame(Q_eqv).to_excel('matrix_Q.xlsx')
 
-### OLD CODE
+### OLD CODE (WE DO NOT NEED THIS, BUT DONT DELETE IT)
 
 # U_tab = []
 # h_damp = []
@@ -243,9 +243,6 @@ for U in range(5, 200):
     damping_beta_list.append(-np.real(Q_eqv_eigenvals[4]) / omega_beta)
 
     #print(np.real(Q_eqv_eigenvals))
-
-
-
 
     eig_real_part_list1.append(np.real(Q_eqv_eigenvals[0]))
     eig_real_part_list2.append(np.real(Q_eqv_eigenvals[2]))
