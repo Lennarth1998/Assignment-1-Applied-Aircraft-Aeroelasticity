@@ -151,8 +151,27 @@ def matrices(rho, U, amplitude):
     return Q_eqv
 
 def stability_assesment(U, amp):
+    delta_A = 0.01
+    # outside
+    Q_eqv = matrices(1.225, U, amp+delta_A)
+    Q_eqv_eigenvals, _ = np.linalg.eig(Q_eqv)
+    real_parts = np.real(Q_eqv_eigenvals)
+    if np.all(real_parts < 0):
+        stb_out = 1 #Stable from the outside
+    else:
+        stb_out = 0 #Unstable from the outside
+
     # inside
-    Q_eqv = matrices(1.225, U, amp)
+    Q_eqv = matrices(1.225, U, amp-delta_A)
+    Q_eqv_eigenvals, _ = np.linalg.eig(Q_eqv)
+    real_parts = np.real(Q_eqv_eigenvals)
+    if np.all(real_parts < 0):
+        stb_in = 0 #Unstable from the outside
+    else:
+        stb_in = 1 #Stable from the outside
+
+    return stb_out, stb_in
+
 
 ## NEW CODE
 
@@ -176,10 +195,18 @@ eig_imag_part_list5 = []
 eig_imag_part_list6 = []
 
 Uf = []
+Uf_stable = []
+Uf_unstable = []
+Uf_hstable = []
+
+A_stable = []
+A_unstable = []
+A_hstable = []
 
 for amp in np.arange(0, 1, 0.005):
     flut = 0
     U = 5
+    print(amp)
     while flut == 0:
         Q_eqv = matrices(1.225, U, amp)
 
@@ -205,14 +232,30 @@ for amp in np.arange(0, 1, 0.005):
 
         if damping_h < 0 or damping_alpha < 0 or damping_beta < 0:
             Uf.append(U)
-            flut = 1
+            stb_out, stb_in = stability_assesment(U, amp)
 
-        U = U + 0.5 
+            if stb_out == 1 and stb_in == 1:
+                Uf_stable.append(U)
+                A_stable.append(amp)
+            elif stb_out == 0 and stb_in == 0:
+                Uf_unstable.append(U)
+                A_unstable.append(amp)
+            else:
+                Uf_hstable.append(U)
+                A_hstable.append(amp)    
+            flut = 1 
+
+        U = U + 0.1 #0.01
+
+
 
 plt.figure()
-plt.scatter(Uf,np.arange(0, 1, 0.005))
+plt.scatter(Uf_stable, A_stable, label = 'stable')
+plt.scatter(Uf_unstable, A_unstable, label = 'unstable')
+plt.scatter(Uf_hstable, A_hstable, label = 'half stable')
 plt.xlabel('$U_F$ [m/s]')
 plt.ylabel('A')
+plt.legend()
 plt.show()
 
 
