@@ -37,7 +37,7 @@ mu              = np.arccos(ch)
 
 T1              = -1/3 * np.sqrt(1-ch**2)*(2+ch**2)+ch*mu
 T2              = ch*(1-ch**2)-np.sqrt(1-ch**2)*(1+ch**2)*mu+ch*(mu)**2
-T3              = -(1/8+ch**2)*mu**2 + 1/4*ch*np.sqrt(1-ch**2)*mu*(7+2*ch**2)-1/8 * (1-ch**2)*(5 *(ch**2)+4)
+T3              = -(1/8 + ch**2)*mu**2 + 1/4*ch*np.sqrt(1-ch**2)*mu*(7+2*ch**2)-1/8 * (1-ch**2)*(5 *(ch**2)+4)
 
 T4              = -mu + ch*np.sqrt(1-ch**2)
 T5              = -(1-ch**2)-(mu**2) + 2*ch*np.sqrt(1-ch**2)*mu
@@ -111,8 +111,8 @@ def matrices(rho, U, amplitude):
     F= F1+(1-psi_1-psi_2)*F2+ (((psi_1*epsi_1)/b)+((psi_2*epsi_2)/b))*F3
 
     #Aerodynamic influence matrix [W]:
-    W0 = np.array([[-psi_1*(-epsi_1/b)**2],
-                   [-psi_2*(-epsi_2/b)**2],
+    W0 = np.array([[-psi_1*(epsi_1/b)**2],
+                   [-psi_2*(epsi_2/b)**2],
                    [psi_1*epsi_1*(1-epsi_1*(0.5-a))/b],
                    [psi_2*epsi_2*(1-epsi_2*(0.5-a))/b],
                    [psi_1*epsi_1*(T10-((epsi_1*T11)/2))/(np.pi*b)],
@@ -121,7 +121,7 @@ def matrices(rho, U, amplitude):
     #W = np.array([[2 * np.pi * b * W0.T],
     #              [-2 * np.pi * (b ** 2) * (a + 0.5) * W0.T],
     #              [b ** 2 * T12 * W0.T]])
-    W = np.array([[2 * np.pi * b * W0.T , 2 * np.pi * (b ** 2) * (a + 0.5) * W0.T, b ** 2 * T12 * W0.T]])
+    W = np.array([[2 * np.pi * b * W0.T , 2 * np.pi * (b ** 2) * (a + 0.5) * W0.T, b ** 2 * T12 * W0.T]]) #minus infront of the 2??
     W = W.reshape([3, 6])
     
 
