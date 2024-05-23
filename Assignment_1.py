@@ -221,7 +221,7 @@ eig_imag_part_list4 = []
 eig_imag_part_list5 = []
 eig_imag_part_list6 = []
 
-for U in range(50, 100):
+for U in range(5, 200):
     Q_eqv = matrices(1.225, U, 0)
 
     V = []
@@ -287,22 +287,20 @@ for U in range(50, 100):
 
 
 plt.figure()
-plt.scatter(U_list, eig_imag_part_list1, label='h')
-plt.scatter(U_list, eig_imag_part_list2, label='h')
-plt.scatter(U_list, eig_imag_part_list3, label=r'$\alpha$')
-plt.scatter(U_list, eig_imag_part_list4, label=r'$\alpha$')
-plt.scatter(U_list, eig_imag_part_list5, label=r'$\beta$')
-plt.scatter(U_list, eig_imag_part_list6, label=r'$\beta$')
-plt.legend()
+plt.scatter(U_list, eig_imag_part_list1)
+plt.scatter(U_list, eig_imag_part_list2)
+plt.scatter(U_list, eig_imag_part_list3)
+plt.scatter(U_list, eig_imag_part_list4)
+plt.scatter(U_list, eig_imag_part_list5)
+plt.scatter(U_list, eig_imag_part_list6)
 plt.title('Imag part eigenvalues')
 plt.grid()
 plt.show()
 
 plt.figure()
-plt.scatter(U_list, eig_real_part_list1, label='h')
-plt.scatter(U_list, eig_real_part_list2, label=r'$\alpha$')
-plt.scatter(U_list, eig_real_part_list3, label=r'$\beta$')
-plt.legend()
+plt.scatter(U_list, eig_real_part_list1)
+plt.scatter(U_list, eig_real_part_list2)
+plt.scatter(U_list, eig_real_part_list3)
 plt.title('Real part eigenvalues')
 plt.grid()
 plt.show()
