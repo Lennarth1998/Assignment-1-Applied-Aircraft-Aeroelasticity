@@ -210,6 +210,17 @@ damping_alpha_list = []
 damping_beta_list = []
 U_list = []
 
+eig_real_part_list1 = []
+eig_real_part_list2 = []
+eig_real_part_list3 = []
+
+eig_imag_part_list1 = []
+eig_imag_part_list2 = []
+eig_imag_part_list3 = []
+eig_imag_part_list4 = []
+eig_imag_part_list5 = []
+eig_imag_part_list6 = []
+
 for U in range(5, 200):
     Q_eqv = matrices(1.225, U, 0)
 
@@ -231,31 +242,68 @@ for U in range(5, 200):
     damping_alpha_list.append(-np.real(Q_eqv_eigenvals[2]) / omega_alpha)
     damping_beta_list.append(-np.real(Q_eqv_eigenvals[4]) / omega_beta)
 
+    #print(np.real(Q_eqv_eigenvals))
+
+
+
+
+    eig_real_part_list1.append(np.real(Q_eqv_eigenvals[0]))
+    eig_real_part_list2.append(np.real(Q_eqv_eigenvals[2]))
+    eig_real_part_list3.append(np.real(Q_eqv_eigenvals[4]))
+
+
+
+    eig_imag_part_list1.append(np.imag(Q_eqv_eigenvals[0]))
+    eig_imag_part_list2.append(np.imag(Q_eqv_eigenvals[1]))
+    eig_imag_part_list3.append(np.imag(Q_eqv_eigenvals[2]))
+    eig_imag_part_list4.append(np.imag(Q_eqv_eigenvals[3]))
+    eig_imag_part_list5.append(np.imag(Q_eqv_eigenvals[4]))
+    eig_imag_part_list6.append(np.imag(Q_eqv_eigenvals[5]))
+
+
     U_list.append(U)
 
 
 
+# plt.figure()
+# plt.xlabel('U in [m/s]')
+# plt.ylabel(r'$\omega$')
+# plt.plot(U_list, omega_h_list, label='h')
+# plt.plot(U_list, omega_alpha_list, label=r'\alpha')
+# plt.plot(U_list, omega_beta_list, label=r'\beta')
+# plt.grid()
+# plt.savefig('omega_plot.png')
+# plt.show()
+#
+# plt.figure()
+# plt.xlabel('U in [m/s]')
+# plt.ylabel(r'$\zeta$')
+# plt.plot(U_list, damping_h_list, label='h')
+# plt.plot(U_list, damping_alpha_list, label=r'\alpha')
+# plt.plot(U_list, damping_beta_list, label=r'\beta')
+# plt.grid()
+# plt.savefig('damping_plot.png')
+# plt.show()
+
+
 plt.figure()
-plt.xlabel('U in [m/s]')
-plt.ylabel(r'$\omega$')
-plt.plot(U_list, omega_h_list, label='h')
-plt.plot(U_list, omega_alpha_list, label=r'\alpha')
-plt.plot(U_list, omega_beta_list, label=r'\beta')
+plt.scatter(U_list, eig_imag_part_list1)
+plt.scatter(U_list, eig_imag_part_list2)
+plt.scatter(U_list, eig_imag_part_list3)
+plt.scatter(U_list, eig_imag_part_list4)
+plt.scatter(U_list, eig_imag_part_list5)
+plt.scatter(U_list, eig_imag_part_list6)
+plt.title('Imag part eigenvalues')
 plt.grid()
-plt.savefig('omega_plot.png')
 plt.show()
 
 plt.figure()
-plt.xlabel('U in [m/s]')
-plt.ylabel(r'$\zeta$')
-plt.plot(U_list, damping_h_list, label='h')
-plt.plot(U_list, damping_alpha_list, label=r'\alpha')
-plt.plot(U_list, damping_beta_list, label=r'\beta')
+plt.scatter(U_list, eig_real_part_list1)
+plt.scatter(U_list, eig_real_part_list2)
+plt.scatter(U_list, eig_real_part_list3)
+plt.title('Real part eigenvalues')
 plt.grid()
-plt.savefig('damping_plot.png')
 plt.show()
-
-
 
 
 
