@@ -1,6 +1,10 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+#from __future__ import division
+import scipy as sp
+import scipy.linalg as ln
+import scipy.optimize as opt
 
 
 #Initiating import parameters:
@@ -210,6 +214,17 @@ damping_alpha_list = []
 damping_beta_list = []
 U_list = []
 
+eig_real_part_list1 = []
+eig_real_part_list2 = []
+eig_real_part_list3 = []
+
+eig_imag_part_list1 = []
+eig_imag_part_list2 = []
+eig_imag_part_list3 = []
+eig_imag_part_list4 = []
+eig_imag_part_list5 = []
+eig_imag_part_list6 = []
+
 for U in range(5, 200):
     Q_eqv = matrices(1.225, U, 0)
 
@@ -231,31 +246,122 @@ for U in range(5, 200):
     damping_alpha_list.append(-np.real(Q_eqv_eigenvals[2]) / omega_alpha)
     damping_beta_list.append(-np.real(Q_eqv_eigenvals[4]) / omega_beta)
 
+    #print(np.real(Q_eqv_eigenvals))
+
+
+
+
+    eig_real_part_list1.append(np.real(Q_eqv_eigenvals[0]))
+    eig_real_part_list2.append(np.real(Q_eqv_eigenvals[2]))
+    eig_real_part_list3.append(np.real(Q_eqv_eigenvals[4]))
+
+
+
+    eig_imag_part_list1.append(np.imag(Q_eqv_eigenvals[0]))
+    eig_imag_part_list2.append(np.imag(Q_eqv_eigenvals[1]))
+    eig_imag_part_list3.append(np.imag(Q_eqv_eigenvals[2]))
+    eig_imag_part_list4.append(np.imag(Q_eqv_eigenvals[3]))
+    eig_imag_part_list5.append(np.imag(Q_eqv_eigenvals[4]))
+    eig_imag_part_list6.append(np.imag(Q_eqv_eigenvals[5]))
+
+
     U_list.append(U)
 
+def tau_hopf(eig_vals, eps = 1e-13):
+    """
+    :param eig_vals: contains all the eigne values of the system
+    :return: tau_hopf (value of the test function
+    """
+
+    # Pick out only the complex eigen values
+    # eps = 1e-15  # it seems 1e-15 is too low. -> due to numerical errors values larger than 1e-15 can appear
+    # eps = 1e-13  # it seems 1e-13 is fine.
+    i_cmp = sp.where(sp.absolute(eig_vals.imag) > eps)
+    vals_complex = eig_vals[i_cmp]
+
+    # Calculate tau_hopf
+    if vals_complex.size == 0:
+        tau_h = 0
+    else:
+        tau_h = 1
+        for i, val in enumerate(vals_complex):
+            i_cc = sp.where(
+                (sp.absolute(val.real - vals_complex.real) < eps) & (sp.absolute(val.imag + vals_complex.imag) < eps))[
+                0][0]
+            tau_h *= sp.sqrt(val.real + vals_complex[i_cc].real)
+
+    return sp.real(tau_h)
+
+def locate_bifurcation(U_min, U_max):
+    """
+    Determine the exact location and parameters of the bifurcation point
+    :param func: function that returns the eigenvalues of the system
+    :param U_min: lower bound of the velocity range [m/s]
+    :param U_max: upper bound of the velocity range [m/s]
+    :return: bifurcation parameters
+    """
+
+    xtol = 1e-5
+
+    tau = lambda U: tau_hopf(ln.eigvals(matrices(1.225, U, 0)))
+
+    # Find the bifurcation point:
+    U_bf = opt.brentq(tau, U_min, U_max, xtol=xtol)
+
+    # Calculate bifurcation parameters (frequency, damping ratio):
+    Q_eqv = matrices(1.225, U_bf, 0)
+    #Q = func(U_bf)
+    evals = ln.eigvals(Q_eqv)
+
+    eval_bf = evals[sp.absolute(evals.real).argmin()]
+
+    omega_bf = sp.absolute(eval_bf)
+    zeta_bf = -eval_bf.real/sp.absolute(eval_bf)
+
+    return U_bf, omega_bf, zeta_bf, eval_bf
+
+U_bf, omega_bf, zeta_bf, evals = locate_bifurcation(0,200)
+print(U_bf, omega_bf, zeta_bf, evals)
+
+# plt.figure()
+# plt.xlabel('U in [m/s]')
+# plt.ylabel(r'$\omega$')
+# plt.plot(U_list, omega_h_list, label='h')
+# plt.plot(U_list, omega_alpha_list, label=r'\alpha')
+# plt.plot(U_list, omega_beta_list, label=r'\beta')
+# plt.grid()
+# plt.savefig('omega_plot.png')
+# plt.show()
+#
+# plt.figure()
+# plt.xlabel('U in [m/s]')
+# plt.ylabel(r'$\zeta$')
+# plt.plot(U_list, damping_h_list, label='h')
+# plt.plot(U_list, damping_alpha_list, label=r'\alpha')
+# plt.plot(U_list, damping_beta_list, label=r'\beta')
+# plt.grid()
+# plt.savefig('damping_plot.png')
+# plt.show()
 
 
 plt.figure()
-plt.xlabel('U in [m/s]')
-plt.ylabel(r'$\omega$')
-plt.plot(U_list, omega_h_list, label='h')
-plt.plot(U_list, omega_alpha_list, label=r'\alpha')
-plt.plot(U_list, omega_beta_list, label=r'\beta')
+plt.scatter(U_list[50:70], eig_imag_part_list1[50:70])
+plt.scatter(U_list[50:70], eig_imag_part_list2[50:70])
+plt.scatter(U_list[50:70], eig_imag_part_list3[50:70])
+plt.scatter(U_list[50:70], eig_imag_part_list4[50:70])
+plt.scatter(U_list[50:70], eig_imag_part_list5[50:70])
+plt.scatter(U_list[50:70], eig_imag_part_list6[50:70])
+plt.title('Imag part eigenvalues')
 plt.grid()
-plt.savefig('omega_plot.png')
 plt.show()
 
 plt.figure()
-plt.xlabel('U in [m/s]')
-plt.ylabel(r'$\zeta$')
-plt.plot(U_list, damping_h_list, label='h')
-plt.plot(U_list, damping_alpha_list, label=r'\alpha')
-plt.plot(U_list, damping_beta_list, label=r'\beta')
+plt.scatter(U_list[50:70], eig_real_part_list1[50:70])
+plt.scatter(U_list[50:70], eig_real_part_list2[50:70])
+plt.scatter(U_list[50:70], eig_real_part_list3[50:70])
+plt.title('Real part eigenvalues')
 plt.grid()
-plt.savefig('damping_plot.png')
 plt.show()
-
-
 
 
 
